@@ -284,7 +284,7 @@ void run_game() {
                 showing_detail = false;
                 selected_index = 0;
                 break;
-            case 16:  // Shift 키
+            case 16: 
                 if (quest_visible) {
                     showing_detail = !showing_detail;
                 }

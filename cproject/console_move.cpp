@@ -21,7 +21,7 @@ void draw_quest_detail(const Quest* quest);
 
 void draw_inventory_box(const Inventory* inv);
 void draw_inventory(Player* player);
-void draw_quest_info(const Quest* quest);
+void draw_quest_info();
 
 void draw_inventory(Player* player) {
     int startX = MAP_WIDTH * 2 + 5;
@@ -61,7 +61,7 @@ void draw_inventory(Player* player) {
     draw_inventory_box(&player->inventory);
 }
 
-void draw_quest_info(const Quest* quest) {
+void draw_quest_info() {
     int x = MAP_WIDTH * 2 + 5;
     int y = 12;
     int width = 45;
@@ -163,23 +163,6 @@ void draw_inventory_box(const Inventory* inv) {
         }
     }
 }void draw_quest_list(int selected_index) {
-    int box_x = MAP_WIDTH * 2 + 5; // 테두리 시작 위치와 동일
-    int box_y = 12;
-    int width = 45;
-    int height = 10;
-
-    int text_x = box_x + 2;  // 여백 고려
-    int text_y = box_y + (height - active_quest_count) / 2;
-
-    for (int i = 0; i < active_quest_count; i++) {
-        gotoxy(text_x, text_y + i);
-        if (active_quests[i]) {
-            printf("> %s", active_quests[i]->name);
-        }
-        else {
-            printf(" (퀘스트 정보 없음)");
-        }
-    }
 
 
 }
@@ -232,7 +215,7 @@ void run_game() {
     player.y = 2;
 
     // 퀘스트 등록 (최대 3개)
-    setup_quests();
+    //setup_quests();
 
     // 상태 변수
     bool inventory_visible = false;
@@ -246,15 +229,15 @@ void run_game() {
         if (_kbhit()) {
             char input = _getch();
 
-            // 방향키 조합 처리 (0 또는 224는 특수키 prefix)
-            if (input == 0 || input == -32) {
-                input = _getch();  // 방향키 실제 코드
-                if (quest_visible && !showing_detail) {
-                    if (input == 72 && selected_index > 0) selected_index--; // ↑
-                    if (input == 80 && selected_index < active_quest_count - 1) selected_index++; // ↓
-                }
-                continue;
-            }
+            //// 방향키 조합 처리 (0 또는 224는 특수키 prefix)
+            //if (input == 0 || input == -32) {
+            //    input = _getch();  // 방향키 실제 코드
+            //    if (quest_visible && !showing_detail) {
+            //        if (input == 72 && selected_index > 0) selected_index--; // ↑
+            //        if (input == 80 && selected_index < active_quest_count - 1) selected_index++; // ↓
+            //    }
+            //    continue;
+            //}
 
             switch (input) {
             case 'w': case 'W':
@@ -309,12 +292,12 @@ void run_game() {
                 draw_inventory(&player);
             }// 
             else if (quest_visible) {
-                draw_quest_info(active_quests[selected_index]); // ← 테두리 항상 그림
+                draw_quest_info(); // ← 테두리 항상 그림
                 if (showing_detail) {
-                    draw_quest_detail(active_quests[selected_index]);
+                    //draw_quest_detail(active_quests[selected_index]);
                 }
                 else {
-                    draw_quest_list(selected_index);
+                    //draw_quest_list(selected_index);
                 }
             }
 

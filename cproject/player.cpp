@@ -1,0 +1,85 @@
+#pragma execution_character_set("utf-8")
+
+#include "player.h"
+#include "base.h"
+#include <stdio.h>
+#include <conio.h>
+
+
+
+void init_player(Player* player) {
+
+	player->x = 1;
+	player->y = 1;
+	player->region = 0;
+	player->energy = max_energy;
+	player->money = 0;
+	player->day = 1;
+	player->season = 1;	
+	player->sign = '@';
+	player->money = 100;
+	player->current_item = 0;
+	player->quest_progress = 0;
+	player->weather = 0; // 0: 맑음, 1: 비
+
+	//동적 item추가가 아닌 출력 시험용  inventoryItem item목록
+	player->inventory.count = 3; // 아이템 수
+	player->inventory.max_slots = MAX_INVENTORY;
+
+	strcpy_s(player->inventory.items[0].name, "감자");
+	player->inventory.items[0].quantity = 3;
+
+	strcpy_s(player->inventory.items[1].name, "토마토");
+	player->inventory.items[1].quantity = 2;
+
+	strcpy_s(player->inventory.items[2].name, "단호박");
+	player->inventory.items[2].quantity = 1;
+}
+void move_player(Player* player) {
+	while (true) {
+		char inputASDW = _getch();
+		switch (inputASDW) {
+		case 'w':
+			if (true) {
+				player->y++;
+				printf("player x: %d, y: %d\n", player->x, player->y);
+			}
+			break;
+		case 'a':
+			if (player->x > 0) {
+				player->x--;
+				printf("player x: %d, y: %d\n", player->x, player->y);
+
+			}
+			break;
+		case 's':
+			if (player->y > 0) {
+				player->y--;
+				printf("player x: %d, y: %d\n", player->x, player->y);
+
+			}
+			break;
+		case 'd':
+			if (true) { // 콘솔 x축 최대범위로 수정
+				player->x++;
+				printf("player x: %d, y: %d\n", player->x, player->y);
+			}
+			break;
+		}
+	}
+}
+	void sleep_player(Player * player) {
+		while (_kbhit()) {
+			if (_getch() == 't') {
+				player->x = 1;
+				player->y = 1;
+				player->energy = max_energy;
+				player->day++;
+				if (player->day == 15) {
+					player->day = 1;
+					player->season++;
+				}
+			}
+
+		}
+	}

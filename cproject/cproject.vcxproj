@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="console_move.cpp" />
+    <ClCompile Include="farm.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inventory.cpp" />
     <ClCompile Include="item.cpp" />
@@ -138,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="base.cpp" />
     <ClInclude Include="base.h" />
+    <ClInclude Include="farm.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inventory.h" />
     <ClInclude Include="item.h" />

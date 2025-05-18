@@ -9,6 +9,7 @@
 #include "quest.h"
 #include "game.h"
 #include "inventory.h"
+#include "farm.h"
 
 #define MAP_WIDTH 30
 #define MAP_HEIGHT 20
@@ -145,7 +146,7 @@ void draw_inventory_box(const Inventory* inv) {
                 break;
             }
         }
-
+        // 계절 정보 찾기
         gotoxy(cx, cy++);
         if (found) {
             const char* season_str = "";
@@ -154,7 +155,7 @@ void draw_inventory_box(const Inventory* inv) {
             case SUMMER: season_str = "여름"; break;
             case FALL:   season_str = "가을"; break;
             case WINTER: season_str = "겨울"; break;
-            }
+            }// 총 내용 출력하기
             printf(" - %s (%s, %d일, ₩%d): %d개",
                 found->name, season_str, found->grow_days, found->sell_price, qty);
         }
@@ -180,15 +181,34 @@ void draw_map(Player* player) {
         player->day, player->season, player->energy, weather_str);
     printf(" 위치: (%d, %d)\n\n", player->x, player->y);
 
-    for (int y = 0; y < MAP_HEIGHT; y++) {
-        for (int x = 0; x < MAP_WIDTH; x++) {
-            if (x == player->x && y == player->y)
-                printf("@ ");
-            else
-                printf(". ");
+        for (int y = 0; y < MAP_HEIGHT; y++) {
+            for (int x = 0; x < MAP_WIDTH; x++) {
+                // 첫 줄 5칸만 밭
+                if (y == 0 && x < FARM_WIDTH) {
+                    if (player->x == x && player->y == y) {
+                        printf("[@]");
+                    }
+                    else {
+                        FarmTile tile = farm[y][x];
+                        switch (tile.state) {
+                        case TILE_EMPTY:   printf("[ ]"); break;
+                        case TILE_PLOWED:  printf("[^]"); break;
+                        case TILE_PLANTED: printf("[s]"); break;
+                        case TILE_GROWING: printf("[g]"); break;
+                        case TILE_READY:   printf("[R]"); break;
+                        }
+                    }
+                }
+                else {
+                    if (player->x == x && player->y == y)
+                        printf("@ ");
+                    else
+                        printf(". ");
+                }
+            }
+            printf("\n");
         }
-        printf("\n");
-    }
+
 
     menuDraw();
 }

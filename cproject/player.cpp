@@ -1,11 +1,14 @@
-#pragma execution_character_set("utf-8")
+ï»¿#pragma execution_character_set("utf-8")
 
 #include "player.h"
 #include "base.h"
 #include <stdio.h>
 #include <conio.h>
 
-
+//í¬í•¨ ë‚´ìš©
+// ì‚¬ìš©ìê°€ ë³´ìœ ì¤‘ì¸ ì¸ë²¤í† ë¦¬ 
+// ì‚¬ìš©ìê°€ ê°€ì§„ í€˜ìŠ¤íŠ¸
+// ì¦‰, ì‚¬ìš©ìê°€ í–‰ë™í•˜ëŠ”ê±°
 
 void init_player(Player* player) {
 
@@ -20,20 +23,28 @@ void init_player(Player* player) {
 	player->money = 100;
 	player->current_item = 0;
 	player->quest_progress = 0;
-	player->weather = 0; // 0: ¸¼À½, 1: ºñ
+	player->weather = 0; // 0: ë§‘ìŒ, 1: ë¹„
 
-	//µ¿Àû itemÃß°¡°¡ ¾Æ´Ñ Ãâ·Â ½ÃÇè¿ë  inventoryItem item¸ñ·Ï
-	player->inventory.count = 3; // ¾ÆÀÌÅÛ ¼ö
+	player->inventory.count = 0;
 	player->inventory.max_slots = MAX_INVENTORY;
 
-	strcpy_s(player->inventory.items[0].name, "°¨ÀÚ");
-	player->inventory.items[0].quantity = 3;
+	// ì‘ë¬¼ 0~2ë²ˆ ì¸ë²¤í† ë¦¬ì— ì¶”ê°€
+	for (int i = 0; i < 3; i++) {
+		const char* name = crop_list[i].name;
+		add_item(&player->inventory, name, 3 - i); // ê°ì 3, ë‹¹ê·¼ 2, í† ë§ˆí†  1
+	}
+	////ë™ì  itemì¶”ê°€ê°€ ì•„ë‹Œ ì¶œë ¥ ì‹œí—˜ìš©  inventoryItem itemëª©ë¡
+	//player->inventory.count = 3; // ì•„ì´í…œ ìˆ˜
+	//player->inventory.max_slots = MAX_INVENTORY;
 
-	strcpy_s(player->inventory.items[1].name, "Åä¸¶Åä");
-	player->inventory.items[1].quantity = 2;
+	//strcpy_s(player->inventory.items[0].name, "ê°ì");
+	//player->inventory.items[0].quantity = 3;
 
-	strcpy_s(player->inventory.items[2].name, "´ÜÈ£¹Ú");
-	player->inventory.items[2].quantity = 1;
+	//strcpy_s(player->inventory.items[1].name, "í† ë§ˆí† ");
+	//player->inventory.items[1].quantity = 2;
+
+	//strcpy_s(player->inventory.items[2].name, "ë‹¨í˜¸ë°•");
+	//player->inventory.items[2].quantity = 1;
 }
 void move_player(Player* player) {
 	while (true) {
@@ -60,7 +71,7 @@ void move_player(Player* player) {
 			}
 			break;
 		case 'd':
-			if (true) { // ÄÜ¼Ö xÃà ÃÖ´ë¹üÀ§·Î ¼öÁ¤
+			if (true) { // ì½˜ì†” xì¶• ìµœëŒ€ë²”ìœ„ë¡œ ìˆ˜ì •
 				player->x++;
 				printf("player x: %d, y: %d\n", player->x, player->y);
 			}

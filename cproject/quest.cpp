@@ -1,4 +1,6 @@
-﻿#include "quest.h"
+﻿#pragma execution_character_set("utf-8")
+
+#include "quest.h"
 #include <string.h>
 #include <stdio.h>
 

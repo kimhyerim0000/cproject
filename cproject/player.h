@@ -21,15 +21,22 @@ typedef struct {
 	int money;
 	int day;
 	int season; // 1:봄 2:여름 3:가을 4:겨울
-	int current_item; //현재 선택된 아이템
-	int quest_progress; //퀘스트 진행 상태
-	int selected_index;
-	Inventory inventory; //인벤토리
+
+	// 인벤토리 관련
+	int current_item; // '> '가 가리키는 인벤토리 아이템 인덱스
+	int selected_index; //  shift를 눌렀을때 선택된 아이템 인덱스
+	Inventory inventory; //인벤토리	
 	//int inventory_slot; //보유 가능한 인벤토리 슬롯수
+	char last_selected_message[100];
+
+	// 퀘스트 관련
+	int quest_progress; //퀘스트 진행 상태
 } Player;
+
+extern Player player;
 
 void init_player(Player* player);
 
-void move_player(Player* player);
-
-void sleep_player(Player* player);
+//void move_player(Player* player);
+//
+//void sleep_player(Player* player);

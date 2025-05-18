@@ -8,6 +8,7 @@ void run_game();
 
 int main() 
 {
+	Player player;
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 	SetConsole();

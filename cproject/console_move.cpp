@@ -21,10 +21,10 @@ void draw_quest_list(int selected_index);
 void draw_quest_detail(const Quest* quest);
 
 void draw_inventory_box(const Inventory* inv, int selected_index);
-void draw_inventory(Player* player);
+void draw_inventory();
 void draw_quest_info();
 
-void draw_inventory(Player* player) {
+void draw_inventory() {
     int startX = MAP_WIDTH * 2 + 5;
     int startY = 2;
     int width = 28;
@@ -52,14 +52,28 @@ void draw_inventory(Player* player) {
     int cx = startX + 2;
     int cy = startY + 1;
     gotoxy(cx, cy++); printf("======Inventory======");
-    gotoxy(cx, cy++); printf("Money         : %d", player->money);
-    gotoxy(cx, cy++); printf("Current Item  : %d", player->current_item);
-    gotoxy(cx, cy++); printf("Slot          : %d", player->inventory.max_slots);
-    gotoxy(cx, cy++); printf("Quest Progress: %d", player->quest_progress);
+    gotoxy(cx, cy++); printf("Money         : %d", player.money);
+    gotoxy(cx, cy++); printf("Current Item  : %d", player.current_item);
+    gotoxy(cx, cy++); printf("Slot          : %d", player.inventory.max_slots);
+    gotoxy(cx, cy++); printf("Quest Progress: %d", player.quest_progress);
 
     gotoxy(startX, startY + height + 1);
     
-    draw_inventory_box(&player->inventory, player->selected_index);
+    draw_inventory_box(&player.inventory, player.selected_index);
+
+    int msg_x = MAP_WIDTH * 2 + 5 + 2;
+    int msg_y = 12 + 16;
+
+    gotoxy(msg_x, msg_y);
+    //if (strlen(player->last_selected_message) > 0) {
+    //    printf("%s", player->last_selected_message);
+    //    printf("출력됨");
+    //}
+    //else {
+    //    printf("                                         "); // 기존 출력 지우기
+    //}
+    printf("DEBUG MSG: %s", player.last_selected_message);
+
 }
 
 void draw_quest_info() {
@@ -128,7 +142,7 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
 
     int cx = x + 2;
     int cy = y + 1;
-    gotoxy(cx, cy++); printf("📦 보유 아이템");
+    gotoxy(cx, cy++); printf("📦 Inventory");
 
     for (int i = 0; i < inv->count && cy < y + height - 1; i++) {
         const char* name = inv->items[i].name;
@@ -177,18 +191,18 @@ void draw_quest_detail(const Quest* quest) {
 
 
 
-void draw_map(Player* player) {
+void draw_map() {
     system("cls");
-    const char* weather_str = (player->weather == 0) ? "☀️ 맑음" : "🌧️ 비";
+    const char* weather_str = (player.weather == 0) ? "☀️ 맑음" : "🌧️ 비";
     printf("📅 Day %d  🍂 Season %d  ⚡ Energy: %d  날씨: %s\n",
-        player->day, player->season, player->energy, weather_str);
-    printf(" 위치: (%d, %d)\n\n", player->x, player->y);
+        player.day, player.season, player.energy, weather_str);
+    printf(" 위치: (%d, %d)\n\n", player.x, player.y);
 
         for (int y = 0; y < MAP_HEIGHT; y++) {
             for (int x = 0; x < MAP_WIDTH; x++) {
                 // 첫 줄 5칸만 밭
                 if (y == 0 && x < FARM_WIDTH) {
-                    if (player->x == x && player->y == y) {
+                    if (player.x == x && player.y == y) {
                         printf("[@]");
                     }
                     else {
@@ -203,7 +217,7 @@ void draw_map(Player* player) {
                     }
                 }
                 else {
-                    if (player->x == x && player->y == y)
+                    if (player.x == x && player.y == y)
                         printf("@ ");
                     else
                         printf(". ");
@@ -216,22 +230,21 @@ void draw_map(Player* player) {
     menuDraw();
 }
 
-void update_day(Player* player) {
-    player->day++;
-    if (player->day > 14) {
-        player->day = 1;
-        player->season++;
-        printf(" 새로운 계절이 시작되었습니다! (Season %d)\n", player->season);
+void update_day() {
+    player.day++;
+    if (player.day > 14) {
+        player.day = 1;
+        player.season++;
+        printf(" 새로운 계절이 시작되었습니다! (Season %d)\n", player.season);
     }
-    player->energy = max_energy;
-    player->weather = rand() % 2; // 랜덤 날씨
+    player.energy = max_energy;
+    player.weather = rand() % 2; // 랜덤 날씨
 }
 
 // 사용자 키보드 입력 처리
 void run_game() {
     srand((unsigned int)time(NULL));
 
-    Player player;
     init_player(&player);
     player.x = 5;
     player.y = 2;
@@ -244,7 +257,7 @@ void run_game() {
     bool quest_visible = false;
     bool showing_detail = false;
 
-    draw_map(&player);
+    draw_map();
 
     while (1) {
         if (_kbhit()) {
@@ -262,17 +275,17 @@ void run_game() {
                 }
             }
             //  Shift 키 (ASCII 16)
-            if (input == 16) {
-                if (inventory_visible) {
-                    player.current_item = player.selected_index;
+            if (input == 16 && inventory_visible) {
+                player.current_item = player.selected_index;
 
-                    int msg_x = MAP_WIDTH * 2 + 5 + 2;
-                    int msg_y = 12 + 16; // 테두리 아래 줄
+                const char* name = player.inventory.items[player.selected_index].name;
 
-                    gotoxy(msg_x, msg_y);
-                    printf("🎯 '%s' 씨앗을 선택했습니다.             \n", player.inventory.items[player.selected_index].name);
-                }
+                printf("선택된 아이템 이름: %s\n", name); // 디버깅용
+                sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),
+                    "🎯 '%s' 씨앗을 선택했습니다.", name);
             }
+
+
 
             // 방향키 처리 -> player.cpp로 옮기기
             switch (input) {
@@ -290,12 +303,16 @@ void run_game() {
                 break;
             case 'q': case 'Q':
                 printf(" 잠자기 선택! 하루가 지났습니다.\n");
-                update_day(&player);
+                update_day();
                 Sleep(1000);
                 break;
             case 'i': case 'I':
                 inventory_visible = !inventory_visible;
                 quest_visible = false;
+
+                if (!inventory_visible) {
+                    strcpy_s(player.last_selected_message, sizeof(player.last_selected_message), "");
+                }
                 break;
             case 'e': case 'E':
                 quest_visible = !quest_visible;
@@ -303,28 +320,28 @@ void run_game() {
                 showing_detail = false;
                 selected_index = 0;
                 break;
-            case 16: 
+            /*case 16: 
                 if (quest_visible) {
                     showing_detail = !showing_detail;
                 }
-                break;
+                break;*/
             }
             // 에너지 처리
             if (input != 'q' && input != 'Q' && input != 16) {
                 player.energy--;
                 if (player.energy <= 0) {
                     printf(" 에너지가 다 떨어졌습니다. 자동으로 하루가 지납니다.\n");
-                    update_day(&player);
+                    update_day();
                     Sleep(1000);
                 }
             }
             //맵 그리기
-            draw_map(&player);
+            draw_map();
 
 			//퀘스트 그리기
             //인벤토리 그리기
             if (inventory_visible) {
-                draw_inventory(&player);
+                draw_inventory();
             }// 
             else if (quest_visible) {
                 draw_quest_info(); // ← 테두리 항상 그림

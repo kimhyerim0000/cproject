@@ -9,25 +9,28 @@
 // 사용자가 보유중인 인벤토리 
 // 사용자가 가진 퀘스트
 // 즉, 사용자가 행동하는거
+Player player;
 
 void init_player(Player* player) {
-
+	player->sign = '@';
 	player->x = 1;
 	player->y = 1;
 	player->region = 0;
 	player->energy = max_energy;
-	player->money = 0;
-	player->day = 1;
-	player->season = 1;	
-	player->sign = '@';
-	player->money = 100;
-	player->current_item = 0;
-	player->quest_progress = 0;
 	player->weather = 0; // 0: 맑음, 1: 비
+	player->money = 100;
+	player->day = 1;
+	player->season = 1;
 
+	//인벤토리 관련
+	player->current_item = 0;
 	player->selected_index = 0; // 인벤토리에서 선택된 아이템 인덱스
 	player->inventory.count = 0;
 	player->inventory.max_slots = MAX_INVENTORY;
+	strcpy_s(player->last_selected_message, sizeof(player->last_selected_message), "");
+	
+	//퀘스트 관련
+	player->quest_progress = 0;
 
 	// 작물 0~2번 인벤토리에 추가
 	for (int i = 0; i < 3; i++) {

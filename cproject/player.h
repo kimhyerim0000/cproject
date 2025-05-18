@@ -23,6 +23,7 @@ typedef struct {
 	int season; // 1:봄 2:여름 3:가을 4:겨울
 	int current_item; //현재 선택된 아이템
 	int quest_progress; //퀘스트 진행 상태
+	int selected_index;
 	Inventory inventory; //인벤토리
 	//int inventory_slot; //보유 가능한 인벤토리 슬롯수
 } Player;

@@ -25,6 +25,7 @@ void init_player(Player* player) {
 	player->quest_progress = 0;
 	player->weather = 0; // 0: 맑음, 1: 비
 
+	player->selected_index = 0; // 인벤토리에서 선택된 아이템 인덱스
 	player->inventory.count = 0;
 	player->inventory.max_slots = MAX_INVENTORY;
 
@@ -33,6 +34,13 @@ void init_player(Player* player) {
 		const char* name = crop_list[i].name;
 		add_item(&player->inventory, name, 3 - i); // 감자 3, 당근 2, 토마토 1
 	}
+
+	// 씨앗 0~2번 인벤토리에 추가
+	for (int i = 0; i < 3; i++) {
+		const char* name = seed_list[i].name_seeds;
+		add_item(&player->inventory, name, 3 - i); // 감자 씨앗 3, 당근 씨앗 2, 토마토 씨앗 1
+	}
+
 	////동적 item추가가 아닌 출력 시험용  inventoryItem item목록
 	//player->inventory.count = 3; // 아이템 수
 	//player->inventory.max_slots = MAX_INVENTORY;
@@ -46,40 +54,40 @@ void init_player(Player* player) {
 	//strcpy_s(player->inventory.items[2].name, "단호박");
 	//player->inventory.items[2].quantity = 1;
 }
-void move_player(Player* player) {
-	while (true) {
-		char inputASDW = _getch();
-		switch (inputASDW) {
-		case 'w':
-			if (true) {
-				player->y++;
-				printf("player x: %d, y: %d\n", player->x, player->y);
-			}
-			break;
-		case 'a':
-			if (player->x > 0) {
-				player->x--;
-				printf("player x: %d, y: %d\n", player->x, player->y);
-
-			}
-			break;
-		case 's':
-			if (player->y > 0) {
-				player->y--;
-				printf("player x: %d, y: %d\n", player->x, player->y);
-
-			}
-			break;
-		case 'd':
-			if (true) { // 콘솔 x축 최대범위로 수정
-				player->x++;
-				printf("player x: %d, y: %d\n", player->x, player->y);
-			}
-			break;
-		}
-	}
-}
-	void sleep_player(Player * player) {
+//void move_player(Player* player) {
+//	while (true) {
+//		char inputASDW = _getch();
+//		switch (inputASDW) {
+//		case 'w':
+//			if (true) {
+//				player->y++;
+//				printf("player x: %d, y: %d\n", player->x, player->y);
+//			}
+//			break;
+//		case 'a':
+//			if (player->x > 0) {
+//				player->x--;
+//				printf("player x: %d, y: %d\n", player->x, player->y);
+//
+//			}
+//			break;
+//		case 's':
+//			if (player->y > 0) {
+//				player->y--;
+//				printf("player x: %d, y: %d\n", player->x, player->y);
+//
+//			}
+//			break;
+//		case 'd':
+//			if (true) { // 콘솔 x축 최대범위로 수정
+//				player->x++;
+//				printf("player x: %d, y: %d\n", player->x, player->y);
+//			}
+//			break;
+//		}
+//	}
+//}
+	/*void sleep_player(Player * player) {
 		while (_kbhit()) {
 			if (_getch() == 't') {
 				player->x = 1;
@@ -92,5 +100,5 @@ void move_player(Player* player) {
 				}
 			}
 
-		}
-	}
+		}*/
+	//}

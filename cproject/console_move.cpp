@@ -20,7 +20,7 @@ bool showing_detail = false; // 상세 정보 모드 여부
 void draw_quest_list(int selected_index);
 void draw_quest_detail(const Quest* quest);
 
-void draw_inventory_box(const Inventory* inv);
+void draw_inventory_box(const Inventory* inv, int selected_index);
 void draw_inventory(Player* player);
 void draw_quest_info();
 
@@ -59,7 +59,7 @@ void draw_inventory(Player* player) {
 
     gotoxy(startX, startY + height + 1);
     
-    draw_inventory_box(&player->inventory);
+    draw_inventory_box(&player->inventory, player->selected_index);
 }
 
 void draw_quest_info() {
@@ -101,21 +101,19 @@ void draw_quest_info() {
     
 }
 
-void draw_inventory_box(const Inventory* inv) {
+void draw_inventory_box(const Inventory* inv, int selected_index) {
     int x = MAP_WIDTH * 2 + 5;
     int y = 12;
 
     const int width = 45;
-    const int visible_rows = 10;  // 고정된 높이
-    const int height = visible_rows + 6; // 상하 테두리 포함
+    const int visible_rows = 10;
+    const int height = visible_rows + 6;
 
-    // 박스 상단
     gotoxy(x, y);
     printf("┌");
     for (int i = 0; i < width - 2; i++) printf("─");
     printf("┐");
 
-    // 박스 측면
     for (int i = 1; i < height - 1; i++) {
         gotoxy(x, y + i);
         printf("│");
@@ -123,13 +121,11 @@ void draw_inventory_box(const Inventory* inv) {
         printf("│");
     }
 
-    // 박스 하단
     gotoxy(x, y + height - 1);
     printf("└");
     for (int i = 0; i < width - 2; i++) printf("─");
     printf("┘");
 
-    // 내부 정보
     int cx = x + 2;
     int cy = y + 1;
     gotoxy(cx, cy++); printf("📦 보유 아이템");
@@ -146,8 +142,13 @@ void draw_inventory_box(const Inventory* inv) {
                 break;
             }
         }
-        // 계절 정보 찾기
-        gotoxy(cx, cy++);
+
+        gotoxy(cx, cy);
+
+        // 커서 위치 표시
+        if (i == selected_index) printf(" > ");
+        else printf("   ");
+
         if (found) {
             const char* season_str = "";
             switch (found->season) {
@@ -155,13 +156,15 @@ void draw_inventory_box(const Inventory* inv) {
             case SUMMER: season_str = "여름"; break;
             case FALL:   season_str = "가을"; break;
             case WINTER: season_str = "겨울"; break;
-            }// 총 내용 출력하기
-            printf(" - %s (%s, %d일, ₩%d): %d개",
+            }
+            printf("%s (%s, %d일, ₩%d): %d개",
                 found->name, season_str, found->grow_days, found->sell_price, qty);
         }
         else {
-            printf(" - %s: %d개", name, qty);
+            printf("%s: %d개", name, qty);
         }
+
+        cy++;  // 다음 줄로 이동
     }
 }void draw_quest_list(int selected_index) {
 
@@ -224,9 +227,8 @@ void update_day(Player* player) {
     player->weather = rand() % 2; // 랜덤 날씨
 }
 
+// 사용자 키보드 입력 처리
 void run_game() {
-    
-
     srand((unsigned int)time(NULL));
 
     Player player;
@@ -241,24 +243,38 @@ void run_game() {
     bool inventory_visible = false;
     bool quest_visible = false;
     bool showing_detail = false;
-    int selected_index = 0;
 
     draw_map(&player);
 
     while (1) {
         if (_kbhit()) {
             char input = _getch();
+            
+            if (input == 0 || input == -32) {
+                input = _getch();  // 두 번째 입력이 실제 방향키
+                if (inventory_visible && !quest_visible) {
+                    if (input == 72 && player.selected_index > 0) {
+                        player.selected_index--;
+                    }
+                    if (input == 80 && player.selected_index < player.inventory.count - 1) {
+                        player.selected_index++;
+                    }
+                }
+            }
+            //  Shift 키 (ASCII 16)
+            if (input == 16) {
+                if (inventory_visible) {
+                    player.current_item = player.selected_index;
 
-            //// 방향키 조합 처리 (0 또는 224는 특수키 prefix)
-            //if (input == 0 || input == -32) {
-            //    input = _getch();  // 방향키 실제 코드
-            //    if (quest_visible && !showing_detail) {
-            //        if (input == 72 && selected_index > 0) selected_index--; // ↑
-            //        if (input == 80 && selected_index < active_quest_count - 1) selected_index++; // ↓
-            //    }
-            //    continue;
-            //}
+                    int msg_x = MAP_WIDTH * 2 + 5 + 2;
+                    int msg_y = 12 + 16; // 테두리 아래 줄
 
+                    gotoxy(msg_x, msg_y);
+                    printf("🎯 '%s' 씨앗을 선택했습니다.             \n", player.inventory.items[player.selected_index].name);
+                }
+            }
+
+            // 방향키 처리 -> player.cpp로 옮기기
             switch (input) {
             case 'w': case 'W':
                 if (player.y > 0) player.y--;
@@ -293,7 +309,6 @@ void run_game() {
                 }
                 break;
             }
-
             // 에너지 처리
             if (input != 'q' && input != 'Q' && input != 16) {
                 player.energy--;

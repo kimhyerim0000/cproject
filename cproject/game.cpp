@@ -19,11 +19,11 @@ void handle_input(Player* player) {
             FarmTile* tile = &farm[y][x];
 
             if (tile->state == TILE_PLOWED) {
-                // 현재 선택된 아이템 이름
-                if (player->current_item >= player->inventory.count) {
-                    printf("선택된 아이템이 유효하지 않습니다.\n");
-                    return;
-                }
+                //// 현재 선택된 아이템 이름
+                //if (player->current_item >= player->inventory.count) {
+                //    printf("선택된 아이템이 유효하지 않습니다.\n");
+                //    return;
+                //}
 
                 const char* item_name = player->inventory.items[player->current_item].name;
                 int qty = get_item_count(&player->inventory, item_name);

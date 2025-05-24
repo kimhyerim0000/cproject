@@ -15,7 +15,7 @@ typedef enum {
 
 typedef struct {
     TileState state;
-    int crop_id;
+    int seed_id;
     int grow_day;
     bool watered_today;
 } FarmTile;

@@ -8,7 +8,6 @@
 //포함 내용
 // 사용자가 보유중인 인벤토리 
 // 사용자가 가진 퀘스트
-// 즉, 사용자가 행동하는거
 Player player;
 
 void init_player(Player* player) {
@@ -34,13 +33,13 @@ void init_player(Player* player) {
 
 	// 작물 0~2번 인벤토리에 추가
 	for (int i = 0; i < 3; i++) {
-		const char* name = crop_list[i].name;
+		const char* name = seed_list[i].seed_name;
 		add_item(&player->inventory, name, 3 - i); // 감자 3, 당근 2, 토마토 1
 	}
 
 	// 씨앗 0~2번 인벤토리에 추가
 	for (int i = 0; i < 3; i++) {
-		const char* name = seed_list[i].name_seeds;
+		const char* name = seed_list[i].seed_name;
 		add_item(&player->inventory, name, 3 - i); // 감자 씨앗 3, 당근 씨앗 2, 토마토 씨앗 1
 	}
 

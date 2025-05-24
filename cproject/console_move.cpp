@@ -72,7 +72,7 @@ void draw_inventory() {
     //else {
     //    printf("                                         "); // 기존 출력 지우기
     //}
-    printf("DEBUG MSG: %s", player.last_selected_message);
+    printf("%s", player.last_selected_message);
 
 }
 
@@ -149,10 +149,10 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
         int qty = inv->items[i].quantity;
 
         // 작물 정보 찾기
-        const Crop* found = NULL;
+        const Seed* found = NULL;
         for (int j = 0; j < crop_count; j++) {
-            if (strcmp(crop_list[j].name, name) == 0) {
-                found = &crop_list[j];
+            if (strcmp(seed_list[j].seed_name, name) == 0) {
+                found = &seed_list[j];
                 break;
             }
         }
@@ -172,7 +172,7 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
             case WINTER: season_str = "겨울"; break;
             }
             printf("%s (%s, %d일, ₩%d): %d개",
-                found->name, season_str, found->grow_days, found->sell_price, qty);
+                found->seed_name, season_str, found->seed_grow, found->seed_sell_price, qty);
         }
         else {
             printf("%s: %d개", name, qty);
@@ -274,19 +274,15 @@ void run_game() {
                     }
                 }
             }
-            //  Shift 키 (ASCII 16)
-            if (input == 16 && inventory_visible) {
+            if (input == 13 && inventory_visible) { // Enter 키
                 player.current_item = player.selected_index;
-
                 const char* name = player.inventory.items[player.selected_index].name;
-
-                printf("선택된 아이템 이름: %s\n", name); // 디버깅용
                 sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),
-                    "🎯 '%s' 씨앗을 선택했습니다.", name);
+                    "'%s'을 선택했습니다.", name);
             }
-
-
-
+            if (input == 49 && inventory_visible ) {
+				handle_input(&player); 
+            }
             // 방향키 처리 -> player.cpp로 옮기기
             switch (input) {
             case 'w': case 'W':

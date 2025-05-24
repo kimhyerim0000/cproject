@@ -13,7 +13,7 @@ void init_inventory(Inventory* inv) {
 
 int add_item(Inventory* inv, const char* name, int amount) {
     for (int i = 0; i < inv->count; i++) {
-        if (strcmp(inv->items[i].name, name) == 0) {
+        if (strcmp(inv->items[i].name , name) == 0) {
             inv->items[i].quantity += amount;
             return 1;
         }

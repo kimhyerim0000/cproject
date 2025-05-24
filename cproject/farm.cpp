@@ -10,7 +10,7 @@ void init_farm() {
     for (int y = 0; y < FARM_HEIGHT; y++) {
         for (int x = 0; x < FARM_WIDTH; x++) {
             farm[y][x].state = TILE_PLOWED;  // 기본값은 갈아엎은 상태
-            farm[y][x].crop_id = -1;
+            farm[y][x].seed_id = -1;
             farm[y][x].grow_day = 0;
             farm[y][x].watered_today = false;
         }
@@ -23,8 +23,8 @@ void update_farm() {
         for (int x = 0; x < FARM_WIDTH; x++) {
             FarmTile* tile = &farm[y][x];
             if (tile->state == TILE_PLANTED && tile->watered_today) {
-                tile->grow_day++;
-                int required = crop_list[tile->crop_id].grow_days;
+                tile->grow_day++; //얘는 심긴 씨앗이 며칠째인지 세는 변수
+                int required = seed_list[tile->seed_id].seed_grow;
                 if (tile->grow_day >= required) {
                     tile->state = TILE_READY;
                 }

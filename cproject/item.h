@@ -13,7 +13,7 @@ typedef enum {
 } Season;
 
 typedef struct {
-    char name[MAX_NAME_LEN];  // 작물 이름
+    char crop_name[MAX_NAME_LEN];  // 작물 이름
     Season season;            // 계절
     int grow_days;            // 성장에 필요한 날짜
     int sell_price;           // 판매 가격
@@ -24,10 +24,10 @@ extern Crop crop_list[10];
 extern int crop_count;
 
 typedef struct {
-	char name_seeds[MAX_NAME_LEN];  // 씨앗 이름
+	char seed_name[MAX_NAME_LEN];  // 씨앗 이름
 	Season season;            // 계절
-	int grow_days_seeds;            // 성장에 필요한 날짜
-	int sell_price_seeds;           // 판매 가격
+	int seed_grow;            // 성장에 필요한 날짜
+	int seed_sell_price;           // 판매 가격
 } Seed;
 
 // 씨앗 리스트

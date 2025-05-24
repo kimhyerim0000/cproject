@@ -135,6 +135,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="quest.cpp" />
+    <ClCompile Include="quest_inventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="item.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="quest.h" />
+    <ClInclude Include="quest_inventory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

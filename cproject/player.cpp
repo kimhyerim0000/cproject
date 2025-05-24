@@ -30,6 +30,8 @@ void init_player(Player* player) {
 	
 	//퀘스트 관련
 	player->quest_progress = 0;
+	player->selected_quest_index = 0;
+	player->active_quest_index = -1; // 아직 선택 안 됨
 
 	// 작물 0~2번 인벤토리에 추가
 	for (int i = 0; i < 3; i++) {

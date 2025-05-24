@@ -23,3 +23,5 @@ typedef struct {
 extern FarmTile farm[FARM_HEIGHT][FARM_WIDTH];
 
 void init_farm();
+void update_farm();
+void draw_farm();

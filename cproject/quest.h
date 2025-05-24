@@ -14,3 +14,4 @@ typedef struct {
     char target_crop[MAX_NAME_LEN]; // 목표 작물 이름
 } Quest;
 
+extern Quest quest_list[MAX_TOTAL_QUESTS]; // 전체 퀘스트 목록

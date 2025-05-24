@@ -31,12 +31,11 @@ typedef struct {
 
 	// 퀘스트 관련
 	int quest_progress; //퀘스트 진행 상태
+	int selected_quest_index;     // 퀘스트 목록 커서 위치 (화면에 '>' 표시용)
+	int active_quest_index;       // 실제 선택한 퀘스트 번호 (ENTER로 선택되었을 때 기록)
+
 } Player;
 
 extern Player player;
 
 void init_player(Player* player);
-
-//void move_player(Player* player);
-//
-//void sleep_player(Player* player);

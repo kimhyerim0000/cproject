@@ -34,6 +34,8 @@ void handle_input(Player* player) {
                 tile->grow_day = 0;
                 tile->watered_today = false;
 
+                remove_item(&player->inventory, selected_name, 1);
+
                 sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
                     "'%s'을(를) 밭에 심었습니다.", selected_name);
             }
@@ -46,5 +48,61 @@ void handle_input(Player* player) {
             sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
                 "여기는 씨앗을 심을 수 없습니다.");
         }
+    }
+}
+void water_crop_at_player_position(Player* player) {
+    int x = player->x;
+    int y = player->y;
+
+    if (y == 0 && x < FARM_WIDTH) {
+        FarmTile* tile = &farm[y][x];
+
+        if (tile->state == TILE_PLANTED || tile->state == TILE_GROWING) {
+            tile->watered_today = true;
+
+
+            sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+                "작물에 물을 주었습니다.");
+        }
+        else {
+            sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+                "여기는 작물이 자라고 있지 않습니다.");
+        }
+    }
+    else {
+        sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+            "밭이 아닌 곳에는 물을 줄 수 없습니다.");
+    }
+}
+void harvest_crop_at_player_position(Player* player) {
+    int x = player->x;
+    int y = player->y;
+
+    if (y == 0 && x < FARM_WIDTH) {
+        FarmTile* tile = &farm[y][x];
+
+        if (tile->state == TILE_READY && tile->seed_id != -1) {
+            const char* crop_name = crop_list[tile->seed_id].crop_name;
+
+            // 인벤토리에 수확한 작물 추가
+            add_item(&player->inventory, crop_name, 1);
+
+            // 타일 초기화
+            tile->state = TILE_EMPTY ;
+            tile->seed_id = -1;
+            tile->grow_day = 0;
+            tile->watered_today = false;
+
+            sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+                "'%s'을(를) 수확했습니다!", crop_name);
+        }
+        else {
+            sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+                "수확할 수 있는 작물이 없습니다.");
+        }
+    }
+    else {
+        sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+            "밭이 아닌 곳에서는 수확할 수 없습니다.");
     }
 }

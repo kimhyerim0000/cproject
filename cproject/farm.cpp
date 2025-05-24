@@ -22,7 +22,7 @@ void update_farm() {
     for (int y = 0; y < FARM_HEIGHT; y++) {
         for (int x = 0; x < FARM_WIDTH; x++) {
             FarmTile* tile = &farm[y][x];
-            if (tile->state == TILE_PLANTED && tile->watered_today) {
+            if ((tile->state== TILE_GROWING|| tile->state == TILE_PLANTED) && tile->watered_today) {
                 tile->grow_day++; //얘는 심긴 씨앗이 며칠째인지 세는 변수
                 int required = seed_list[tile->seed_id].seed_grow;
                 if (tile->grow_day >= required) {

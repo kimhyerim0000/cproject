@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <iostream>
 
+#include "quest_inventory.h"
 #include "player.h"
 #include "base.h"
 #include "quest.h"
@@ -17,7 +18,7 @@
 int selected_index = 0; // 현재 커서 위치
 bool showing_detail = false; // 상세 정보 모드 여부
 
-void draw_quest_list(int selected_index);
+void draw_quest_list();
 void draw_quest_detail(const Quest* quest);
 
 void draw_inventory_box(const Inventory* inv, int selected_index);
@@ -180,10 +181,33 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
 
         cy++;  // 다음 줄로 이동
     }
-}void draw_quest_list(int selected_index) {
+}void draw_quest_list() {
+    int x = MAP_WIDTH * 2 + 5 + 2;
+    int y = 13;
 
+    gotoxy(x, y - 1);
+    for (int i = 0; i < player_quest_list.quest_count; i++) {
+        gotoxy(x, y + i);
 
+        // 커서 표시
+        if (i == player.selected_quest_index)
+            printf("> ");
+        else
+            printf("  ");
+
+        // 퀘스트 이름과 상태 출력
+        const Quest* q = &player_quest_list.active_quests[i];
+        printf("%s (%s: %d/%d) [%s]",
+            q->name,
+            q->target_crop,
+            q->current_progress,
+            q->target_harvest,
+            q->completed ? "완료" : "진행중");
+    }
 }
+
+
+
 
 void draw_quest_detail(const Quest* quest) {
 
@@ -239,6 +263,7 @@ void update_day() {
     }
     player.energy = max_energy;
     player.weather = rand() % 2; // 랜덤 날씨
+    update_farm();
 }
 
 // 사용자 키보드 입력 처리
@@ -283,6 +308,15 @@ void run_game() {
             if (input == 49 && inventory_visible ) {
 				handle_input(&player); 
             }
+            if (input == 50) {
+                //물주기 2번
+				water_crop_at_player_position(&player);
+            }
+			if (input == 51) {
+				//수확하기 3번
+				harvest_crop_at_player_position(&player);
+			}
+
             // 방향키 처리 -> player.cpp로 옮기기
             switch (input) {
             case 'w': case 'W':
@@ -341,12 +375,11 @@ void run_game() {
             }// 
             else if (quest_visible) {
                 draw_quest_info(); // ← 테두리 항상 그림
+				draw_quest_list();
                 if (showing_detail) {
                     //draw_quest_detail(active_quests[selected_index]);
                 }
-                else {
-                    //draw_quest_list(selected_index);
-                }
+               
             }
 
         }

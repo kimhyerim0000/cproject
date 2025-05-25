@@ -1,3 +1,4 @@
+#pragma execution_character_set("utf-8")
 #include "quest_inventory.h"
 #include <string.h>
 #include <stdio.h>
@@ -58,17 +59,4 @@ void complete_quest(QuestInventory* qinv, int index) {
     }
 
     qinv->quest_count--;
-}
-
-void print_quest_inventory(const QuestInventory* qinv) {
-    printf("=== 현재 퀘스트 목록 ===\n");
-    for (int i = 0; i < qinv->quest_count; i++) {
-        const Quest* q = &qinv->active_quests[i];
-        printf(" - %s (%s: %d/%d) [%s]\n",
-            q->name,
-            q->target_crop,
-            q->current_progress,
-            q->target_harvest,
-            q->completed ? "완료" : "진행중");
-    }
 }

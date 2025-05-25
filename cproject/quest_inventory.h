@@ -16,4 +16,3 @@ void init_quest_inventory(QuestInventory* qinv);
 int add_quest(QuestInventory* qinv, const Quest* new_quest);
 void update_quest_progress(QuestInventory* qinv, const char* crop_name);
 void complete_quest(QuestInventory* qinv, int index);
-void print_quest_inventory(const QuestInventory* qinv);

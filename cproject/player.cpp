@@ -17,7 +17,7 @@ void init_player(Player* player) {
 	player->region = 0;
 	player->energy = max_energy;
 	player->weather = 0; // 0: 맑음, 1: 비
-	player->money = 100;
+	player->money = 1000;
 	player->day = 1;
 	player->season = 1;
 

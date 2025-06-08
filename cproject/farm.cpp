@@ -9,15 +9,17 @@ FarmTile farm[FARM_HEIGHT][FARM_WIDTH];
 void init_farm() {
     for (int y = 0; y < FARM_HEIGHT; y++) {
         for (int x = 0; x < FARM_WIDTH; x++) {
-            farm[y][x].state = TILE_PLOWED;  // 기본값은 갈아엎은 상태
+            farm[y][x].state = TILE_EMPTY;
             farm[y][x].seed_id = -1;
             farm[y][x].grow_day = 0;
             farm[y][x].watered_today = false;
         }
     }
+    // 기본 텃밭 5칸 설정
+    for (int x = 0; x < 5; x++) {
+        farm[0][x].state = TILE_PLOWED;
+    }
 }
-
-
 void update_farm() {
     for (int y = 0; y < FARM_HEIGHT; y++) {
         for (int x = 0; x < FARM_WIDTH; x++) {
@@ -40,12 +42,15 @@ void update_farm() {
 void draw_farm() {
     for (int y = 0; y < FARM_HEIGHT; y++) {
         for (int x = 0; x < FARM_WIDTH; x++) {
-            switch (farm[y][x].state) {
-            case TILE_EMPTY:   printf("[ ]"); break;
-            case TILE_PLOWED:  printf("[^]"); break;
+            FarmTile tile = farm[y][x];  // ← 이 줄이 있어야 switch에서 tile.state 사용 가능
+
+            switch (tile.state) {
+            case TILE_PLOWED:  printf("[ ]"); break;
             case TILE_PLANTED: printf("[s]"); break;
             case TILE_GROWING: printf("[g]"); break;
             case TILE_READY:   printf("[R]"); break;
+            case TILE_EMPTY:   printf(". "); break;   // 수정된 부분!
+            default:           printf(". "); break;
             }
         }
         printf("\n");

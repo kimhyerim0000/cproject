@@ -1,8 +1,10 @@
 //farm: 경작 관리 내용
 #pragma once
 
-#define FARM_WIDTH 5
-#define FARM_HEIGHT 1
+#include "base.h"
+
+#define FARM_WIDTH MAP_WIDTH
+#define FARM_HEIGHT MAP_HEIGHT
 
 
 typedef enum {

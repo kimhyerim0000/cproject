@@ -27,7 +27,7 @@ void init_player(Player* player) {
 	player->inventory.count = 0;
 	player->inventory.max_slots = MAX_INVENTORY; 
 	strcpy_s(player->last_selected_message, sizeof(player->last_selected_message), "");
-	player->farm_tile = 5;
+	player->farm_tile = 1;
 
 	//퀘스트 관련
 	player->quest_progress = 10;

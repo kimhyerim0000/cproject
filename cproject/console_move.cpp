@@ -202,27 +202,22 @@ void draw_map() {
         for (int y = 0; y < MAP_HEIGHT; y++) {
             for (int x = 0; x < MAP_WIDTH; x++) {
                 // 첫 줄 5칸만 밭
-                if (y == 0 && x < FARM_WIDTH) {
-                    if (player.x == x && player.y == y) {
-                        printf("[@]");
-                    }
-                    else {
-                        FarmTile tile = farm[y][x];
-                        switch (tile.state) {
-                        case TILE_EMPTY:   printf("[ ]"); break;
-                        case TILE_PLOWED:  printf("[^]"); break;
-                        case TILE_PLANTED: printf("[s]"); break;
-                        case TILE_GROWING: printf("[g]"); break;
-                        case TILE_READY:   printf("[R]"); break;
-                        }
-                    }
+                FarmTile tile = farm[y][x];
+
+                if (player.x == x && player.y == y) {
+                    printf("@ ");
                 }
                 else {
-                    if (player.x == x && player.y == y)
-                        printf("@ ");
-                    else
-                        printf(". ");
+                    switch (tile.state) {
+                    case TILE_PLOWED:  printf("[ ]"); break;
+                    case TILE_PLANTED: printf("[s]"); break;
+                    case TILE_GROWING: printf("[g]"); break;
+                    case TILE_READY:   printf("[R]"); break;
+                    case TILE_EMPTY:   printf(". "); break; // 빈 밭
+                    default:           printf(". "); break;  // 그 외는 기본 땅
+                    }
                 }
+
             }
             printf("\n");
         }
@@ -348,6 +343,7 @@ void run_game() {
     srand((unsigned int)time(NULL));
 
     init_player(&player);
+	init_farm();
     initialize_player_quests();
     player.x = 5;
     player.y = 2;
@@ -368,13 +364,14 @@ void run_game() {
             
             if (input == 0 || input == -32) {
                 input = _getch();  // 두 번째 입력이 실제 방향키
-                if (inventory_visible && !quest_visible) {
-                    if (input == 72 && player.selected_index > 0) {
-                        player.selected_index--;
-                    }
-                    if (input == 80 && player.selected_index < player.inventory.count - 1) {
-                        player.selected_index++;
-                    }
+                int max_index = player.inventory.count;  // 실제 아이템 개수
+                max_index += 1;  // 가상 항목(Farm Tile)을 포함
+
+                if (input == 72 && player.selected_index > 0) {
+                    player.selected_index--;
+                }
+                if (input == 80 && player.selected_index < max_index - 1) {
+                    player.selected_index++;
                 }
                 else if (quest_visible && !inventory_visible) {
                     if (input == 72 && player.selected_quest_index > 0) {
@@ -392,17 +389,16 @@ void run_game() {
                     // Farm Tile 선택됨
                     sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),
                         "'Farm Tile'을 선택했습니다.");
-                    if (player.selected_index == 0) {
-                        place_farm_tile(&player);
-                        return;
-                    }
+                    place_farm_tile(&player);  // 설치 시도
                 }
                 else {
-                    // 인벤토리 아이템 접근은 -1 보정
-                    const char* name = player.inventory.items[player.selected_index - 1].name;
+                    // 일반 인벤토리 아이템 선택
+                    player.current_item = player.selected_index - 1;  // ✅ 핵심 수정
+                    const char* name = player.inventory.items[player.current_item].name;
                     sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),
                         "'%s'을 선택했습니다.", name);
                 }
+
             }else if (input == 13 && quest_visible) {
                 int idx = player.selected_quest_index;
 

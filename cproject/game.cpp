@@ -106,3 +106,32 @@ void harvest_crop_at_player_position(Player* player) {
             "밭이 아닌 곳에서는 수확할 수 없습니다.");
     }
 }
+void place_farm_tile(Player* player) {
+    int x = player->x;
+    int y = player->y;
+
+    if (x < 0 || x >= FARM_WIDTH || y < 0 || y >= FARM_HEIGHT) {
+        sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+            "설치할 수 없는 위치입니다.");
+        return;
+    }
+
+    if (player->farm_tile <= 0) {
+        sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+            "밭 타일이 없습니다.");
+        return;
+    }
+
+    if (farm[y][x].state != TILE_EMPTY) {
+        sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+            "해당 위치에 설치할 수 없습니다.");
+        return;
+    }
+
+    farm[y][x].state = TILE_PLOWED;
+    player->farm_tile--;
+
+    sprintf_s(player->last_selected_message, sizeof(player->last_selected_message),
+        "밭을 설치했습니다.");
+}
+

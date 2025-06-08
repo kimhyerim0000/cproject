@@ -31,13 +31,13 @@ void menuDraw() {
 	int y = MAP_HEIGHT+3;
 
 		gotoxy(1, y);
-		printf("[Z] Plant");
+		printf("[1] Plant");
 
 		gotoxy(10, y);
-		printf("| [X] Water");
+		printf("| [2] Water");
 
 		gotoxy(22, y);
-		printf("| [C] Harvest");
+		printf("| [3] Harvest");
 
 		gotoxy(36, y);
 		printf("| [I] Inventory");

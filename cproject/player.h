@@ -28,6 +28,7 @@ typedef struct {
 	Inventory inventory; //인벤토리	
 	//int inventory_slot; //보유 가능한 인벤토리 슬롯수
 	char last_selected_message[100];
+	int farm_tile; // 현재 밭 타일 수 (인벤토리 슬롯과 동일하게 사용)
 
 	// 퀘스트 관련
 	int quest_progress; //퀘스트 진행 상태

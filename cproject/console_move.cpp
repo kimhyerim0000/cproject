@@ -52,8 +52,7 @@ void draw_inventory() {
     int cy = startY + 1;
     gotoxy(cx, cy++); printf("======Inventory======");
     gotoxy(cx, cy++); printf("Money         : %d", player.money);
-    gotoxy(cx, cy++); printf("Current Item  : %d", player.current_item);
-    gotoxy(cx, cy++); printf("Slot          : %d", player.inventory.max_slots);
+    gotoxy(cx, cy++); printf("Farm tile     : %d", player.farm_tile);
     gotoxy(cx, cy++); printf("Quest Progress: %d", player.quest_progress);
 
     gotoxy(startX, startY + height + 1);
@@ -123,11 +122,20 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
     int cy = y + 1;
     gotoxy(cx, cy++); printf("📦 Inventory");
 
+    // 🔹 가상 항목: Farm Tile seletecd_index==0 일때임.
+    gotoxy(cx, cy);
+    if (selected_index == 0)
+        printf(" > ");
+    else
+        printf("   ");
+    printf("Farm Tile: %d개", player.farm_tile);
+    cy++;
+
+    // 🔹 실제 인벤토리 아이템들 (selected_index - 1 비교)
     for (int i = 0; i < inv->count && cy < y + height - 1; i++) {
         const char* name = inv->items[i].name;
         int qty = inv->items[i].quantity;
 
-        // 작물 정보 찾기
         const Seed* found = NULL;
         for (int j = 0; j < crop_count; j++) {
             if (strcmp(seed_list[j].seed_name, name) == 0) {
@@ -135,13 +143,12 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
                 break;
             }
         }
-
         gotoxy(cx, cy);
-
-        // 커서 위치 표시
-        if (i == selected_index) printf(" > ");
-        else printf("   ");
-
+        // 커서 위치: +1 오프셋
+        if (i + 1 == selected_index)
+            printf(" > ");
+        else
+            printf("   ");
         if (found) {
             const char* season_str = "";
             switch (found->season) {
@@ -156,9 +163,9 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
         else {
             printf("%s: %d개", name, qty);
         }
-
-        cy++;  // 다음 줄로 이동
+        cy++;
     }
+
 }void draw_quest_list() {
     int x = MAP_WIDTH * 2 + 5 + 2;
     int y = 13;
@@ -176,12 +183,12 @@ void draw_inventory_box(const Inventory* inv, int selected_index) {
 
         // 퀘스트 이름과 상태 출력
         const Quest* q = &player_quest_list.active_quests[i];
-        printf("%s (%s: %d/%d) [%s]",
+        printf("%s (%s: %d/%d)  %s",
             q->name,
             q->target_crop,
             q->current_progress,
             q->target_harvest,
-            q->completed ? "완료" : "진행중");
+            q->completed ? "[완료]" : "");
     }
 }
 
@@ -234,6 +241,20 @@ void update_day() {
     player.energy = max_energy;
     player.weather = rand() % 2; // 랜덤 날씨
     update_farm();
+    // 비 오는 날 자동 물주기
+    if (player.weather == 1) {
+        for (int y = 0; y < FARM_HEIGHT; y++) {
+            for (int x = 0; x < FARM_WIDTH; x++) {
+                FarmTile* tile = &farm[y][x];
+
+                // 심겨 있는 상태면 물 주기
+                if (tile->state == TILE_PLANTED || tile->state == TILE_GROWING) {
+                    tile->watered_today = true;
+                }
+            }
+        }
+    }
+
 }
 void draw_quest_message() {
     int msg_x = MAP_WIDTH * 2 + 5 + 2;
@@ -364,13 +385,27 @@ void run_game() {
                     }
                 }
             }
-            if (input == 13 && inventory_visible) { // Enter 키
+            if (input == 13 && inventory_visible) {
                 player.current_item = player.selected_index;
-                const char* name = player.inventory.items[player.selected_index].name;
-                sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),
-                    "'%s'을 선택했습니다.", name);
+
+                if (player.selected_index == 0) {
+                    // Farm Tile 선택됨
+                    sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),
+                        "'Farm Tile'을 선택했습니다.");
+                    if (player.selected_index == 0) {
+                        place_farm_tile(&player);
+                        return;
+                    }
+                }
+                else {
+                    // 인벤토리 아이템 접근은 -1 보정
+                    const char* name = player.inventory.items[player.selected_index - 1].name;
+                    sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),
+                        "'%s'을 선택했습니다.", name);
+                }
             }else if (input == 13 && quest_visible) {
                 int idx = player.selected_quest_index;
+
                 if (idx >= 0 && idx < player_quest_list.quest_count) {
                     Quest* q = &player_quest_list.active_quests[idx];
                     const char* target = q->target_crop;
@@ -389,6 +424,7 @@ void run_game() {
                             if (q->current_progress >= q->target_harvest) {
                                 q->completed = true;
 								player.money += q->reward_money;
+                                player.quest_progress--;
                                 show_quest_completion_fireworks_fullscreen(q);
                             }
 

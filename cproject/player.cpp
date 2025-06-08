@@ -25,11 +25,12 @@ void init_player(Player* player) {
 	player->current_item = 0;
 	player->selected_index = 0; // 인벤토리에서 선택된 아이템 인덱스
 	player->inventory.count = 0;
-	player->inventory.max_slots = MAX_INVENTORY;
+	player->inventory.max_slots = MAX_INVENTORY; 
 	strcpy_s(player->last_selected_message, sizeof(player->last_selected_message), "");
-	
+	player->farm_tile = 5;
+
 	//퀘스트 관련
-	player->quest_progress = 0;
+	player->quest_progress = 10;
 	player->selected_quest_index = 0;
 	player->active_quest_index = -1; // 아직 선택 안 됨
 

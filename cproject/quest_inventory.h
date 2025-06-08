@@ -1,7 +1,7 @@
 #pragma once
 #include "quest.h"
 
-#define MAX_ACTIVE_QUESTS 3  // 유저가 동시에 가질 수 있는 최대 퀘스트 수
+#define MAX_ACTIVE_QUESTS 10  // 유저가 동시에 가질 수 있는 최대 퀘스트 수
 
 typedef struct {
     Quest active_quests[MAX_ACTIVE_QUESTS]; // 현재 수락한 퀘스트들

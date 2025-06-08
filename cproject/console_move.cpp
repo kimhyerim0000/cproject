@@ -208,6 +208,9 @@ void draw_map() {
                 if (player.x == x && player.y == y) {
                     printf("@ ");
                 }
+                else if (x == 22 && y == 17) {
+                    printf("▣ ");
+                }
                 else {
                     switch (tile.state) {
                     case TILE_PLOWED:  printf("[ ]"); break;
@@ -439,7 +442,9 @@ void run_game() {
                     }
                 }
             }
-
+            if (player.x == 22 && player.y == 17) {
+                open_shop();  // 상점 열기
+            }
             if (input == 49 && inventory_visible ) {
 				handle_input(&player); 
             }

@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="base.cpp" />
     <ClInclude Include="base.h" />
+    <ClInclude Include="console_move.h" />
     <ClInclude Include="farm.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="intro.h" />

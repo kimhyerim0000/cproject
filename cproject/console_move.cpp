@@ -12,6 +12,7 @@
 #include "inventory.h"
 #include "farm.h"
 #include "shop.h"
+#include "thankYou.h"
 
 #define MAP_WIDTH 30
 #define MAP_HEIGHT 20
@@ -426,7 +427,12 @@ void run_game() {
                                 q->completed = true;
 								player.money += q->reward_money;
                                 player.quest_progress--;
-                                show_quest_completion_fireworks_fullscreen(q);
+								if (player.quest_progress != 0) {
+                                    show_quest_completion_fireworks_fullscreen(q);
+								}
+                                else if (player.quest_progress == 0) {
+                                    thank_you();
+                                }
                             }
 
                             sprintf_s(player.last_selected_message, sizeof(player.last_selected_message),

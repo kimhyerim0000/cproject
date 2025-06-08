@@ -138,6 +138,7 @@
     <ClCompile Include="quest.cpp" />
     <ClCompile Include="quest_inventory.cpp" />
     <ClCompile Include="shop.cpp" />
+    <ClCompile Include="thankYou.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="quest.h" />
     <ClInclude Include="quest_inventory.h" />
     <ClInclude Include="shop.h" />
+    <ClInclude Include="thankYou.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

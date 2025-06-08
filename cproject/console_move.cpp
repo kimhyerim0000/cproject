@@ -11,6 +11,7 @@
 #include "game.h"
 #include "inventory.h"
 #include "farm.h"
+#include "shop.h"
 
 #define MAP_WIDTH 30
 #define MAP_HEIGHT 20
@@ -222,7 +223,8 @@ void draw_map() {
             printf("\n");
         }
 
-
+        
+    draw_shop_ui_bottom_right();
     menuDraw();
 }
 

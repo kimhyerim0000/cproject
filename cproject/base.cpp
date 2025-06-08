@@ -9,6 +9,7 @@
 void gotoxy(int x, int y); 
 
 void SetConsole() {
+	system("chcp 65001 > nul");
 	system("mode con cols=120 lines=30 | title 게임제목");
 	system("title 게임제목");
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);

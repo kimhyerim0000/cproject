@@ -130,23 +130,27 @@
     <ClCompile Include="console_move.cpp" />
     <ClCompile Include="farm.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="intro.cpp" />
     <ClCompile Include="inventory.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="quest.cpp" />
     <ClCompile Include="quest_inventory.cpp" />
+    <ClCompile Include="shop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base.cpp" />
     <ClInclude Include="base.h" />
     <ClInclude Include="farm.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="intro.h" />
     <ClInclude Include="inventory.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="quest.h" />
     <ClInclude Include="quest_inventory.h" />
+    <ClInclude Include="shop.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
